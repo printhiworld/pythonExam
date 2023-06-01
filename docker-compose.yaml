@@ -13,8 +13,6 @@ services:
 
   pg:
     image: postgres:latest
-    volumes:
-      - ./pg_data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: flask_app
       POSTGRES_PASSWORD: 123456
