@@ -10,6 +10,13 @@ db = SQLAlchemy(app)
 
 
 class Note(db.Model):
+    """
+    модель записи
+    id = формируется автоматически
+    name = строка
+    date = строка
+    wish = строка
+    """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(1000))
     date = db.Column(db.String(1000))
@@ -22,6 +29,9 @@ with app.app_context():
 
 @app.route("/")
 def get():
+    """
+    :return: возвращает все записи
+    """
     notes = Note.query.all()
     response = {
         "friends": [{"name": note.name,
@@ -33,6 +43,10 @@ def get():
 
 @app.route("/post", methods=["POST"])
 def post():
+    """
+    проверяет наличие необходимых полей и существование в базе, в случае нехватки данных возвращает ошибку
+    :return: возвращает созданную запись
+    """
     note_data = request.json
     if not note_data or "name" not in note_data or "date" not in note_data or "wish" not in note_data:
         return jsonify({"error": "invalid_request"}), 400
@@ -55,6 +69,11 @@ def post():
 
 @app.route("/put/<int:pk>", methods=["PUT"])
 def put(pk):
+    """
+    принимает первичный ключ из запроса, проверяет наличие всех подей, в случае нехватки данных возвращает ошибку
+    :param pk: int
+    :return: возвращает отредактированную запись
+    """
     note_data = request.json
     note = Note.query.get(pk)
     if not note_data or "name" not in note_data or "date" not in note_data or "wish" not in note_data:
@@ -76,6 +95,11 @@ def put(pk):
 
 @app.route("/delete/<int:pk>", methods=["DELETE"])
 def delete(pk):
+    """
+    принимает первичный ключ из запроса и удаляет запись
+    :param pk: int
+    :return: text "deleted"
+    """
     note = Note.query.get(pk)
 
     db.session.delete(note)
